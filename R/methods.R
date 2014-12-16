@@ -391,9 +391,12 @@ setReplaceMethod("normalizationFactors", signature(object="DESeqDataSet", value=
 #' @author Simon Anders
 #' @seealso \code{\link{estimateSizeFactorsForMatrix}}
 #'
-#' @references \itemize{
-#'   \item Simon Anders, Wolfgang Huber: Differential expression analysis for sequence count data. Genome Biology 11 (2010) R106, \url{http://dx.doi.org/10.1186/gb-2010-11-10-r106}
-#' }
+#' @references
+#'
+#' Reference for the median ratio method:
+#' 
+#' Simon Anders, Wolfgang Huber: Differential expression analysis for sequence count data. Genome Biology 11 (2010) R106, \url{http://dx.doi.org/10.1186/gb-2010-11-10-r106}
+#' 
 #' 
 #' @examples
 #' 
@@ -679,6 +682,11 @@ summary.DESeqResults <- function(object, alpha=.1, ...) {
   down <- sum(object$padj < alpha & object$log2FoldChange < 0, na.rm=TRUE)
   filt <- sum(!is.na(object$pvalue) & is.na(object$padj))
   outlier <- sum(object$baseMean > 0 & is.na(object$pvalue))
+  ft <- if (is.null(attr(object, "filterThreshold"))) {
+    0
+  } else {
+    round(attr(object,"filterThreshold"), 1)
+  }
   printsig <- function(x) format(x, digits=2) 
   cat("out of",notallzero,"with nonzero total read count\n")
   cat(paste0("adjusted p-value < ",alpha,"\n"))
@@ -686,7 +694,7 @@ summary.DESeqResults <- function(object, alpha=.1, ...) {
   cat(paste0("LFC < 0 (down)   : ",down,", ",printsig(down/notallzero*100),"% \n"))
   cat(paste0("outliers [1]     : ",outlier,", ",printsig(outlier/notallzero*100),"% \n"))
   cat(paste0("low counts [2]   : ",filt,", ",printsig(filt/notallzero*100),"% \n"))
-  cat(paste0("(mean count < ",round(attr(object,"filterThreshold"),1),")\n"))
+  cat(paste0("(mean count < ",ft,")\n"))
   cat("[1] see 'cooksCutoff' argument of ?results\n")
   cat("[2] see 'independentFiltering' argument of ?results\n")
   cat("\n")
