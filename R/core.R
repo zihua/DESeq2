@@ -2466,6 +2466,8 @@ fitNbinomGLMsOptim <- function(object,modelMatrix,lambda,
     betaMatrix[row,] <- o$par / scaleCols
     # calculate the standard errors
     mu_row <- as.numeric(nf * 2^(x %*% o$par))
+    minmu <- 0.1
+    mu_row[mu_row < minmu] <- minmu
     w <- diag((mu_row^-1 + alpha)^-1)
     xtwx <- t(x) %*% w %*% x
     xtwxRidgeInv <- solve(xtwx + ridge)

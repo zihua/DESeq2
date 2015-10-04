@@ -1,3 +1,9 @@
+CHANGES IN VERSION 1.8.2
+------------------------
+
+    o Fixed small bug when betaPrior=FALSE, few rows passing through
+      secondary fitting missed a step for lfcSE stabilization.
+    
 CHANGES IN VERSION 1.8.0
 ------------------------
 
